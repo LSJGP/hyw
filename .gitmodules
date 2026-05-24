@@ -1,0 +1,12 @@
+[submodule "hyw-proto"]
+	path = hyw-proto
+	url = https://github.com/LSJGP/hyw-proto.git
+[submodule "hyw-grading"]
+	path = hyw-grading
+	url = https://github.com/LSJGP/hyw-grading.git
+[submodule "hyw-sim"]
+	path = hyw-sim
+	url = https://github.com/LSJGP/hyw-sim.git
+[submodule "hyw-workbench"]
+	path = hyw-workbench
+	url = https://github.com/LSJGP/hyw-workbench.git
