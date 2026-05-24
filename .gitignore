@@ -1,0 +1,16 @@
+# 元仓库：仅忽略根目录杂项；各子模块用自己的 .gitignore
+
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# 若在根目录放本地 env（可选）
+.env
+hyw.env
+hyw.env.local
+
+# 个人 IDE（根目录级）
+.idea/
+.cursor/
+*.code-workspace
