@@ -1,0 +1,19 @@
+# clangd config for hyw monorepo (Bazel + hedron compile_commands).
+#
+# compile_commands.json intentionally covers only first-party C++ under
+# hyw-sim/cpp, hyw-planner/cpp, hyw-grading/src. Bazel external deps and
+# vendored third_party must not be edited in the IDE.
+
+If:
+  PathMatch: .*(/external/|/bazel-|\.cache/bazel|third_party/grpc|grpc_cpp_plugin).*
+Diagnostics:
+  Suppress: '*'
+
+If:
+  PathMatch: .*hyw-proto/third_party/.*
+Diagnostics:
+  Suppress: '*'
+
+CompileFlags:
+  Add:
+    - -Wno-unknown-warning-option

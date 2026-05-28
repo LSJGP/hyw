@@ -10,3 +10,6 @@
 [submodule "hyw-workbench"]
 	path = hyw-workbench
 	url = https://github.com/LSJGP/hyw-workbench.git
+[submodule "hyw-planner"]
+	path = hyw-planner
+	url = https://github.com/LSJGP/hyw-planner.git

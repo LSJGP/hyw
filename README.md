@@ -5,6 +5,7 @@
 ```
 hyw/                          ← 本仓库（记录 submodule 指针）
 ├── hyw-proto/                ← 子模块：.proto 唯一来源
+├── hyw-planner/              ← 子模块：独立 C++ planner gRPC 服务
 ├── hyw-grading/              ← 子模块：C++ 评分 grading_main
 ├── hyw-sim/                  ← 子模块：C++ 闭环仿真 sim_runner
 └── hyw-workbench/            ← 子模块：场景、工具、Web 控制台、输出目录
@@ -12,9 +13,10 @@ hyw/                          ← 本仓库（记录 submodule 指针）
 
 | 子模块 | 仓库 | 职责 |
 |--------|------|------|
-| `hyw-proto` | [hyw-proto](https://github.com/LSJGP/hyw-proto) | `hyw_sim.proto` / `grading_mini.proto` 定义 |
+| `hyw-proto` | [hyw-proto](https://github.com/LSJGP/hyw-proto) | `hyw_sim.proto` / `grading_mini.proto` / `PlannerService` gRPC 契约 |
+| `hyw-planner` | [hyw-planner](https://github.com/LSJGP/hyw-planner) | 独立 `planner_server` 进程（local_dwa / goal_seek / reference_tracker） |
 | `hyw-grading` | [hyw-grading](https://github.com/LSJGP/hyw-grading) | 读取每帧 `MetricFrameInput`，输出评分报告 |
-| `hyw-sim` | [hyw-sim](https://github.com/LSJGP/hyw-sim) | 读场景 JSON → 规划 / 动力学 / 碰撞 → 可选推流给 grading |
+| `hyw-sim` | [hyw-sim](https://github.com/LSJGP/hyw-sim) | 读场景 JSON → gRPC 调 planner → 动力学 / 碰撞 → 可选推流给 grading |
 | `hyw-workbench` | [hyw-workbench](https://github.com/LSJGP/hyw-workbench) | Waymo 转换、批跑、Web Dashboard、`scenarios/`、`output/` |
 
 ---
@@ -28,7 +30,10 @@ cd hyw
 # 评分（只需首次或 grading 有改动）
 cd hyw-grading && bazel build //src/entry:grading_main && cd ..
 
-# 仿真（依赖同级的 hyw-proto）
+# planner 服务（只需首次或 planner 有改动）
+cd hyw-planner && bazel build //cpp:planner_server && cd ..
+
+# 仿真（依赖同级的 hyw-proto；通过 gRPC 连接 planner_server）
 cd hyw-sim && bazel build //cpp:sim_runner && cd ..
 ```
 
@@ -105,12 +110,14 @@ scenario_meta + dynamic_objects + lane_graph
         │
         ▼
 ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│ LaneGraph   │────▶│ MapQuery     │────▶│ Planner     │
-│ 路由/参考线 │     │ 最近车道等   │     │ local_dwa / │
-└─────────────┘     └──────────────┘     │ goal_seek … │
-        │                    │           └──────┬──────┘
-        │                    │                  │
-        ▼                    ▼                  ▼
+│ LaneGraph   │────▶│ MapQuery     │────▶│ PlannerObservation │
+└─────────────┘     └──────────┬─────────┘
+                               │ gRPC (hyw-planner/planner_server)
+                               ▼
+                    ┌──────────────────────┐
+                    │ PlannerTrajectory    │
+                    └──────────┬───────────┘
+                               ▼
 ┌─────────────────────────────────────────────────────┐
 │ World：NPC 插值、自车积分、OBB/SAT 碰撞、帧记录      │
 └─────────────────────────────────────────────────────┘

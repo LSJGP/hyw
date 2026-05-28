@@ -3,12 +3,19 @@
   "clangd.arguments": [
     "--header-insertion=never",
     "--compile-commands-dir=${workspaceFolder}/hyw-workbench",
-    "--query-driver=**"
+    "--query-driver=**",
+    "--clang-tidy=0"
   ],
   "clangd.checkUpdates": false,
   "C_Cpp.intelliSenseEngine": "disabled",
   "files.watcherExclude": {
     "**/bazel-*/**": true,
-    "**/external/**": true
+    "**/external/**": true,
+    "**/.cache/bazel/**": true
+  },
+  "search.exclude": {
+    "**/bazel-*/**": true,
+    "**/external/**": true,
+    "**/.cache/bazel/**": true
   }
 }
