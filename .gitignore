@@ -14,3 +14,6 @@ hyw.env.local
 .idea/
 .cursor/
 *.code-workspace
+
+# 本地独立仓，main 不纳入元仓库 submodule（按需 clone）
+hyw-planner/
