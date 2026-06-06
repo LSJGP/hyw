@@ -72,7 +72,7 @@ cd hyw-sim && bazel build //cpp:sim_runner && cd ..
   （离线 SimLog / both 模式）         stdin 流式 MetricFrameInput（online）
            │                          │
            │                          ▼
-           │              output/report/<name>_grading_report.json
+           │              output/report/<time>_<scenario>/（summary.json + 各 metric 逐帧 JSON）
            ▼
   hyw-workbench/tools/viz_sim.py（可选）
            ▼
@@ -141,7 +141,8 @@ scenario_meta + dynamic_objects + lane_graph
   grading_main  ← metrics JSON（前端勾选 metric 名生成）
         │
         ▼
-  grading_report.json（overallPassed、summaries）
+  report/<time>_<scenario>/summary.json（overallPassed、summaries）
+  report/<time>_<scenario>/<metric>.json（逐帧判定 + logLine）
 
 sim_log.json + 场景 JSON
         │
@@ -209,7 +210,8 @@ cd hyw-workbench
 | 路径 | 内容 |
 |------|------|
 | `log/<scenario>_sim_log.json` | 仿真 SimLog |
-| `report/<scenario>_grading_report.json` | 评分报告 |
+| `report/<time>_<scenario>/summary.json` | 评分汇总（overallPassed、summaries） |
+| `report/<time>_<scenario>/<metric>.json` | 各 metric 逐帧判定（含 logLine） |
 | `viz/<scenario>_sim.gif` | 动画（勾选生成 GIF 时） |
 | `batch/metrics_<job_id>.json` | 本次任务临时 metrics 配置 |
 
