@@ -14,3 +14,6 @@ hyw.env.local
 .idea/
 .cursor/
 *.code-workspace
+
+# 本地一次性远程 SSH 配置产物（不提交）
+hyw-workbench/.local-setup/
